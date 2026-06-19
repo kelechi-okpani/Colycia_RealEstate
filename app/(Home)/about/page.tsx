@@ -1,17 +1,5 @@
 'use client';
-
 import React from 'react';
-import { 
-  Compass, 
-  ShieldCheck, 
-  Gem, 
-  Target, 
-  Layers, 
-  Sparkles, 
-  CheckCircle2, 
-  ArrowUpRight, 
-  Quote 
-} from 'lucide-react';
 import Navbar from '@/src/Layout/Navbar';
 import AboutHero from '@/src/component/about/aboutHero';
 import AboutIntro from '@/src/component/about/aboutIntro';
@@ -42,14 +30,6 @@ export default function AboutUsPage() {
        <AboutGrowth />
        
        <AboutMore />
-
-    
-
-
-      {/* 6. GROWTH STRATEGY TIMELINE SECTION */}
-   
-
-      {/* 7. MORE THAN HOMES & SIGN-OFF (Luxury Editorial Footer Block) */}
    
 
     </div>

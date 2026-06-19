@@ -79,8 +79,8 @@ export default function Footer() {
               </p>
               <p>
                 <span className="font-medium text-slate-800">Phone :</span>{' '}
-                <span className="font-bold text-black group-hover:text-[#F49200]">+2349060142148</span>{' '}
-                <span className="text-xs text-gray-500 font-light">(Calls& Whatsapp)</span>
+                <span className="font-medium text-xs text-slate-800 group-hover:text-[#F49200]"> +2349060142148</span>{' '}
+                <span className="text-xs text-gray-500 font-light"> (Calls& Whatsapp)</span>
               </p>
               <p>
                 <span className="font-medium text-slate-800">Email:</span> colyciacouture@gmail.Com
