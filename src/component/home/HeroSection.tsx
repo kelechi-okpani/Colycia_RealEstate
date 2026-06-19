@@ -80,7 +80,7 @@ const HeroSection = () => {
         </motion.span>
         
 
-      <AutoType 
+      {/* <AutoType 
               phrases={[
                 "PREMIUM REAL ESTATE INVESTMENTS",
                 "SECURE HIGH-YIELD RENTAL REVENUE",
@@ -88,7 +88,7 @@ const HeroSection = () => {
                 // "STRATEGIC CAPITAL APPRECIATION",
                 // "EXCLUSIVE LUXURY PORTFOLIOS"
               ]} 
-            />
+            /> */}
         
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none uppercase max-w-3xl mb-6 select-none">
           {/* Static First Line */}
