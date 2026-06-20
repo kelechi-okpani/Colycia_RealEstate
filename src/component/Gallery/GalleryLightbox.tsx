@@ -1,6 +1,8 @@
 import { ArrowRight, Building, CheckCircle2, Clock, Eye, Layers, MapPin, Maximize2, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from 'next/image';
+
 
 interface GalleryItem {
   id: number;
@@ -250,194 +252,209 @@ const Gallery_Lightbox = () => {
       </motion.section>
 
       {/* Grid Display Framework with dynamic structural layout transition handling */}
-      <section className="max-w-7xl mx-auto px-6 pb-24">
+    <section className="max-w-7xl mx-auto px-6 pb-24">
+  <motion.div 
+    layout
+    variants={containerVariants}
+    initial="hidden"
+    animate="show"
+    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+  >
+    <AnimatePresence mode="popLayout">
+      {filteredItems.map((item, index) => (
         <motion.div 
           layout
-          variants={containerVariants}
+          variants={cardVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          exit="exit"
+          whileHover={{ y: -8, transition: { duration: 0.2 } }}
+          key={item.id}
+          className="group bg-white rounded-xl overflow-hidden border border-gray-100 shadow-xs hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between"
         >
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
-              <motion.div 
-                layout
-                variants={cardVariants}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                whileHover={{ y: -8, transition: { duration: 0.2 } }} // Moving physical lift up element
-                key={item.id}
-                className="group bg-white rounded-xl overflow-hidden border border-gray-100 shadow-xs hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between"
+          {/* Image Frame Wrapper - Using explicit positioning for next/image fill */}
+          <div className="relative h-[260px] w-full overflow-hidden bg-gray-50 isolation-isolate">
+            <motion.div
+              className="absolute inset-0 w-full h-full"
+              whileHover={{ scale: 1.06 }}
+              transition={{ duration: 0.6, ease: [0.215, 0.610, 0.355, 1.000] }}
+            >
+              <Image 
+                src={item.imageUrl} 
+                alt={item.title} 
+                fill
+                sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
+                className="object-cover"
+                priority={index < 3} // Eager load top fold images to prevent pop-in
+              />
+            </motion.div>
+            
+            {/* Backdrop Dimmer overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex items-center justify-center z-10 pointer-events-none" 
+            />
+            
+            {/* Dynamic Floating Action Icon */}
+            <motion.button
+              onClick={() => setSelectedImage(item)}
+              initial={{ opacity: 0, y: "-30%", x: "-50%" }}
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-slate-950 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:top-1/2 transition-all duration-300 z-20 hover:bg-[#F49200] hover:text-white"
+              title="Expand Layout Visual"
+            >
+              <Eye className="w-5 h-5" />
+            </motion.button>
+
+            <span className={`absolute top-4 left-4 z-20 text-[9px] font-black tracking-widest uppercase px-3 py-1.5 rounded-md shadow-xs border ${
+              item.category === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+              item.category === 'ongoing' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+              item.category === 'interiors' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
+              'bg-slate-50 text-slate-700 border-slate-200'
+            }`}>
+              {item.categoryLabel}
+            </span>
+          </div>
+
+          {/* Text Description Info Cards */}
+          <div className="p-6 space-y-3 flex-grow flex flex-col justify-between bg-white">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-1.5 text-gray-400 text-[11px] font-semibold tracking-wide">
+                <MapPin className="w-3.5 h-3.5 text-[#F49200]" />
+                <span>{item.location}</span>
+              </div>
+              <h3 className="font-black text-slate-900 text-sm md:text-base uppercase tracking-tight leading-snug group-hover:text-[#F49200] transition-colors">
+                {item.title}
+              </h3>
+              <p className="text-xs text-gray-500 font-light leading-relaxed line-clamp-2 pt-1">
+                {item.description}
+              </p>
+            </div>
+            
+            <div className="pt-3 border-t border-gray-50 flex items-center justify-between text-[11px] font-bold tracking-wider uppercase text-slate-400 group-hover:text-slate-900 transition-colors">
+              <span>METRIC SPEC 0{index + 1}</span>
+              <button 
+                onClick={() => setSelectedImage(item)} 
+                className="flex items-center space-x-1 text-[#F49200] hover:underline bg-transparent border-none p-0 cursor-pointer"
               >
-                {/* Image Frame Wrapper */}
-                <div className="relative h-[260px] w-full overflow-hidden bg-gray-50">
-                  <motion.img 
-                    src={item.imageUrl} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.06 }}
-                    transition={{ duration: 0.6, ease: [0.215, 0.610, 0.355, 1.000] }}
-                    loading="lazy"
-                  />
-                  {/* Backdrop Dimmer overlay moving via fade */}
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex items-center justify-center z-10 pointer-events-none" 
-                  />
-                  
-                  {/* Dynamic Floating Action Icon - Shifts upward on card hover */}
-                  <motion.button
-                    onClick={() => setSelectedImage(item)}
-                    initial={{ opacity: 0, y: "-30%", x: "-50%" }}
-                    whileHover={{ scale: 1.15 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-slate-950 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:top-1/2 transition-all duration-300 z-20 hover:bg-[#F49200] hover:text-white"
-                    title="Expand Layout Visual"
-                  >
-                    <Eye className="w-5 h-5" />
-                  </motion.button>
-
-                  <span className={`absolute top-4 left-4 z-20 text-[9px] font-black tracking-widest uppercase px-3 py-1.5 rounded-md shadow-xs border ${
-                    item.category === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                    item.category === 'ongoing' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                    item.category === 'interiors' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
-                    'bg-slate-50 text-slate-700 border-slate-200'
-                  }`}>
-                    {item.categoryLabel}
-                  </span>
-                </div>
-
-                {/* Text Description Info Cards */}
-                <div className="p-6 space-y-3 flex-grow flex flex-col justify-between bg-white">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-1.5 text-gray-400 text-[11px] font-semibold tracking-wide">
-                      <MapPin className="w-3.5 h-3.5 text-[#F49200]" />
-                      <span>{item.location}</span>
-                    </div>
-                    <h3 className="font-black text-slate-900 text-sm md:text-base uppercase tracking-tight leading-snug group-hover:text-[#F49200] transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 font-light leading-relaxed line-clamp-2 pt-1">
-                      {item.description}
-                    </p>
-                  </div>
-                  
-                  <div className="pt-3 border-t border-gray-50 flex items-center justify-between text-[11px] font-bold tracking-wider uppercase text-slate-400 group-hover:text-slate-900 transition-colors">
-                    <span>METRIC SPEC 0{index + 1}</span>
-                    <button 
-                      onClick={() => setSelectedImage(item)} 
-                      className="flex items-center space-x-1 text-[#F49200] hover:underline bg-transparent border-none p-0 cursor-pointer"
-                    >
-                      <span>View Detail</span>
-                      <Maximize2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                <span>View Detail</span>
+                <Maximize2 className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
         </motion.div>
-      </section>
+      ))}
+    </AnimatePresence>
+  </motion.div>
+        </section>
 
       {/* Lightbox Overlay Module */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-xs"
-          >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 50 }}
-              transition={{ type: "spring", stiffness: 150, damping: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative bg-white max-w-4xl w-full rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh] md:max-h-auto"
-            >
-              <motion.button
-                whileHover={{ scale: 1.1, backgroundColor: "#F49200" }}
-                whileTap={{ scale: 0.9 }}
+            <AnimatePresence>
+            {selectedImage && (
+                <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 bg-slate-950 text-white w-9 h-9 rounded-full flex items-center justify-center z-50 border border-slate-800"
-                aria-label="Close modal layout window"
-              >
-                <X className="w-4 h-4" />
-              </motion.button>
-
-              <div className="md:w-3/5 bg-slate-950 flex items-center justify-center relative min-h-[260px] md:min-h-[480px]">
-                <motion.img 
-                  initial={{ scale: 1.1, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.1, duration: 0.4 }}
-                  src={selectedImage.imageUrl} 
-                  alt={selectedImage.title} 
-                  className="w-full h-full object-cover md:absolute md:inset-0"
-                />
-              </div>
-
-              <div className="md:w-2/5 p-8 flex flex-col justify-between bg-white overflow-y-auto">
-                <motion.div 
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.15, duration: 0.4 }}
-                  className="space-y-4"
+                className="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 backdrop-blur-xs"
                 >
-                  <span className="text-[10px] font-black tracking-widest text-[#F49200] uppercase bg-amber-50 px-3 py-1.5 rounded-md inline-block border border-amber-100">
-                    {selectedImage.categoryLabel}
-                  </span>
-                  
-                  <div className="space-y-1">
-                    <h3 className="text-lg md:text-xl font-black text-slate-900 uppercase tracking-tight leading-tight">
-                      {selectedImage.title}
-                    </h3>
-                    <div className="flex items-center space-x-1 text-xs font-bold text-gray-400 tracking-wide pt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#F49200]" />
-                      <span>{selectedImage.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="w-12 h-[2px] bg-gray-200" />
-
-                  <p className="text-xs sm:text-sm text-gray-600 font-light leading-relaxed">
-                    {selectedImage.description}
-                  </p>
-                </motion.div>
-
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25, duration: 0.4 }}
-                  className="pt-8 mt-6 border-t border-gray-100 space-y-3"
+                    initial={{ opacity: 0, scale: 0.9, y: 50 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 50 }}
+                    transition={{ type: "spring", stiffness: 150, damping: 20 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative bg-white max-w-4xl w-full rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh] md:max-h-auto"
                 >
-                  <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Interested in similar properties?</p>
-                  <motion.button 
-                    whileHover="hover"
-                    whileTap={{ scale: 0.98 }}
+                    <motion.button
+                    whileHover={{ scale: 1.1, backgroundColor: "#F49200" }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setSelectedImage(null)}
-                    className="w-full inline-flex items-center justify-center space-x-2 bg-slate-950 text-white px-5 py-3 rounded-lg text-xs font-bold tracking-widest transition-colors hover:bg-[#F49200]"
-                  >
-                    <span>REQUEST OFF-PLAN INFO</span>
-                    <motion.div
-                      variants={{
-                        hover: { x: 6 }
-                      }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="absolute top-4 right-4 bg-slate-950 text-white w-9 h-9 rounded-full flex items-center justify-center z-50 border border-slate-800"
+                    aria-label="Close modal layout window"
                     >
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.div>
-                  </motion.button>
-                </motion.div>
-              </div>
+                    <X className="w-4 h-4" />
+                    </motion.button>
 
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    {/* Updated Lightbox Image Container utilizing fixed layout wrappers */}
+                    <div className="md:w-3/5 bg-slate-950 flex items-center justify-center relative min-h-[260px] md:min-h-[480px]">
+                    <motion.div
+                        initial={{ scale: 1.05, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.1, duration: 0.4 }}
+                        className="absolute inset-0 w-full h-full"
+                    >
+                        <Image 
+                        src={selectedImage.imageUrl} 
+                        alt={selectedImage.title} 
+                        fill
+                        sizes="(max-w-768px) 100vw, 60vw"
+                        className="object-cover"
+                        priority
+                        />
+                    </motion.div>
+                    </div>
+
+                    <div className="md:w-2/5 p-8 flex flex-col justify-between bg-white overflow-y-auto">
+                    <motion.div 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.15, duration: 0.4 }}
+                        className="space-y-4"
+                    >
+                        <span className="text-[10px] font-black tracking-widest text-[#F49200] uppercase bg-amber-50 px-3 py-1.5 rounded-md inline-block border border-amber-100">
+                        {selectedImage.categoryLabel}
+                        </span>
+                        
+                        <div className="space-y-1">
+                        <h3 className="text-lg md:text-xl font-black text-slate-900 uppercase tracking-tight leading-tight">
+                            {selectedImage.title}
+                        </h3>
+                        <div className="flex items-center space-x-1 text-xs font-bold text-gray-400 tracking-wide pt-0.5">
+                            <MapPin className="w-3.5 h-3.5 text-[#F49200]" />
+                            <span>{selectedImage.location}</span>
+                        </div>
+                        </div>
+
+                        <div className="w-12 h-[2px] bg-gray-200" />
+
+                        <p className="text-xs sm:text-sm text-gray-600 font-light leading-relaxed">
+                        {selectedImage.description}
+                        </p>
+                    </motion.div>
+
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.25, duration: 0.4 }}
+                        className="pt-8 mt-6 border-t border-gray-100 space-y-3"
+                    >
+                        <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Interested in similar properties?</p>
+                        <motion.button 
+                        whileHover="hover"
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setSelectedImage(null)}
+                        className="w-full inline-flex items-center justify-center space-x-2 bg-slate-950 text-white px-5 py-3 rounded-lg text-xs font-bold tracking-widest transition-colors hover:bg-[#F49200]"
+                        >
+                        <span>REQUEST OFF-PLAN INFO</span>
+                        <motion.div
+                            variants={{
+                            hover: { x: 6 }
+                            }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        >
+                            <ArrowRight className="w-4 h-4" />
+                        </motion.div>
+                        </motion.button>
+                    </motion.div>
+                    </div>
+
+                </motion.div>
+                </motion.div>
+            )}
+            </AnimatePresence>
     </>
   );
 };
