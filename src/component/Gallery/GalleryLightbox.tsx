@@ -116,6 +116,7 @@ const cardVariants = {
 //     }
 //   ];
 // Updated Gallery Data mapping the provided real estate assets
+
 const galleryItems: GalleryItem[] = [
   {
     id: 1,
@@ -250,7 +251,6 @@ const Gallery_Lightbox = () => {
           Showing {filteredItems.length} curated perspective matrices
         </div>
       </motion.section>
-
       {/* Grid Display Framework with dynamic structural layout transition handling */}
     <section className="max-w-7xl mx-auto px-6 pb-24">
   <motion.div 
