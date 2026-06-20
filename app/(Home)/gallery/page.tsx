@@ -18,6 +18,7 @@ import GalleryHero from '@/src/component/Gallery/GalleryHero';
 import Gallery_Architecture from '@/src/component/Gallery/GalleryArchitechture';
 import Gallery_Booking from '@/src/component/Gallery/GalleryBooking';
 import Gallery_Lightbox from '@/src/component/Gallery/GalleryLightbox';
+import SingleVideo from '@/src/component/Gallery/SingleVideo';
 
 
 
@@ -38,6 +39,8 @@ export default function GalleryPage() {
       {/* 4. CURATED MASONRY-STYLE ASYMMETRIC GRID CONFIGURATION */}
       {/* 5. LIGHTBOX AUTOMATION MODAL MODULE */}
    
+      <SingleVideo/>
+      
       <Gallery_Lightbox/>
       {/* 6. BOOKING AND SCHEDULE FOOTER CARD INVITATION */}
   
